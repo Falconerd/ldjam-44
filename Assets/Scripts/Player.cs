@@ -37,6 +37,17 @@ public class Player : MonoBehaviour
 
   void Update()
   {
+
+    if (stabSelfTimer > 0)
+    {
+      if (Time.time > stabbedTime + (stabSelfDuration * 0.8))
+      {
+        GetComponent<PlayerSword>().SetSwordPower(3);
+      }
+      stabSelfTimer -= Time.deltaTime;
+      return;
+    }
+
     if (controller.collisions.above || controller.collisions.below)
       velocity.y = 0;
 
@@ -51,13 +62,16 @@ public class Player : MonoBehaviour
     if (Input.GetButtonUp("Jump") && velocity.y > minJumpForce)
       CancelJump();
 
+    if (Input.GetButtonDown("StabSelf") && velocity.y == 0)
+      StabSelf();
+
     // if (Input.GetButtonDown("Attack"))
 
 
     velocity.x = input.x * moveSpeed;
     velocity.y += gravity * Time.deltaTime;
 
-    if (Mathf.Sign(velocity.x) != transform.localScale.x)
+    if (Mathf.Sign(velocity.x) != transform.localScale.x && velocity.x != 0)
       Flip();
 
     controller.Move(velocity * Time.deltaTime, input);
@@ -78,5 +92,17 @@ public class Player : MonoBehaviour
   void CancelJump()
   {
     velocity.y = minJumpForce;
+  }
+
+
+  float stabSelfTimer;
+  float stabbedTime;
+  float stabSelfDuration = 1.08f;
+
+  void StabSelf()
+  {
+    stabbedTime = Time.time;
+    stabSelfTimer = stabSelfDuration;
+    animator.SetTrigger("stabSelf");
   }
 }
