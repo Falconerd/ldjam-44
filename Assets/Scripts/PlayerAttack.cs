@@ -35,19 +35,19 @@ public class PlayerAttack : MonoBehaviour
         lastAttackTime = Time.time;
         animator.SetTrigger("attack");
         animator.SetBool("isAttacking", true);
+        GetComponent<Player>().attacking = true;
         GetComponent<PlayerSword>().DecreaseSwordPower();
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackTransform.position, attackRange, layerMask);
+        List<Enemy> uniqueEnemyList = new List<Enemy>();
         for (int i = 0; i < enemiesToDamage.Length; i++)
         {
           // Check if we hit the correct side of the enemy.
           Enemy enemy = enemiesToDamage[i].GetComponent<Enemy>();
-          if (enemy.transform.localScale == transform.localScale)
-          {
-            // facing same direction, so must have hit the back
-            Instantiate(sparksPrefab, enemy.transform.position, Quaternion.identity);
-          }
-          else
-            enemy.TakeDamage(damage);
+          if (uniqueEnemyList.Contains(enemy))
+            continue;
+
+          uniqueEnemyList.Add(enemy);
+          enemy.TakeDamage(damage, gameObject);
         }
         if (enemiesToDamage.Length > 0)
           StartCoroutine(cameraShake.Shake(.15f, .04f));
@@ -58,7 +58,10 @@ public class PlayerAttack : MonoBehaviour
       timeBtwAttack -= Time.deltaTime;
 
     if (Time.time >= lastAttackTime + attackAnimLength)
+    {
       animator.SetBool("isAttacking", false);
+      GetComponent<Player>().attacking = false;
+    }
   }
 
   void OnDrawGizmosSelected()

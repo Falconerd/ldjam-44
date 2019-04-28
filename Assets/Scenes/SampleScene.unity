@@ -391,6 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa465c087cfcf2a409e41a7309de8986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxPower: 4
   spriteRenderer: {fileID: 929481248}
 --- !u!4 &384888330 stripped
 Transform:
@@ -4642,7 +4643,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.781584, g: 0.9150943, b: 0.38416696, a: 0}
+  m_BackGroundColor: {r: 0.781584, g: 0.9150943, b: 0.38416696, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -5218,6 +5219,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1137151965323746741, guid: e3b7a6a3b3ff3294bb5b19f0b11119c1,
+        type: 3}
+      propertyPath: bloodEffect
+      value: 
+      objectReference: {fileID: 857294657741845371, guid: c37d981ae9e39da4395e0fd640c44356,
+        type: 3}
+    - target: {fileID: 1137151965323746741, guid: e3b7a6a3b3ff3294bb5b19f0b11119c1,
+        type: 3}
+      propertyPath: sparksPrefab
+      value: 
+      objectReference: {fileID: 1352261167774920863, guid: 12214cd9d7fef664ab2450e935f65ad2,
+        type: 3}
     - target: {fileID: 1137151965323746736, guid: e3b7a6a3b3ff3294bb5b19f0b11119c1,
         type: 3}
       propertyPath: bloodEffect
@@ -5229,7 +5242,8 @@ PrefabInstance:
       propertyPath: health
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1137151965323746736, guid: e3b7a6a3b3ff3294bb5b19f0b11119c1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e3b7a6a3b3ff3294bb5b19f0b11119c1, type: 3}
 --- !u!1001 &2228160528415023707
 PrefabInstance:
@@ -5313,6 +5327,22 @@ PrefabInstance:
       propertyPath: cameraShake
       value: 
       objectReference: {fileID: 519420030}
+    - target: {fileID: 2228160528079779063, guid: f91fe82a96008d04a91fd32a0568cb87,
+        type: 3}
+      propertyPath: sparksPrefab
+      value: 
+      objectReference: {fileID: 1352261167774920863, guid: 12214cd9d7fef664ab2450e935f65ad2,
+        type: 3}
+    - target: {fileID: 2228160528079779063, guid: f91fe82a96008d04a91fd32a0568cb87,
+        type: 3}
+      propertyPath: damage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2228160528079779063, guid: f91fe82a96008d04a91fd32a0568cb87,
+        type: 3}
+      propertyPath: attackRange
+      value: 1.47
+      objectReference: {fileID: 0}
     - target: {fileID: 2228160527227014866, guid: f91fe82a96008d04a91fd32a0568cb87,
         type: 3}
       propertyPath: m_LocalRotation.z
@@ -5475,12 +5505,12 @@ PrefabInstance:
     - target: {fileID: 2777389001861821399, guid: 0a3aea84ab5dd6a47b5cbcc8d950adae,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.773663
+      value: 19.8
       objectReference: {fileID: 0}
     - target: {fileID: 2777389001861821399, guid: 0a3aea84ab5dd6a47b5cbcc8d950adae,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.11723368
+      value: 5.05
       objectReference: {fileID: 0}
     - target: {fileID: 2777389001861821399, guid: 0a3aea84ab5dd6a47b5cbcc8d950adae,
         type: 3}

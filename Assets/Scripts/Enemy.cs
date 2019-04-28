@@ -8,14 +8,18 @@ public class Enemy : MonoBehaviour
   int health = 3;
   [SerializeField]
   GameObject bloodEffect;
-  internal int TakeDamage(int damage)
+  internal virtual int TakeDamage(int damage)
   {
-    Debug.LogFormat("Damage Taken $1", health);
+    Debug.Log("damage: " + damage + ", " + "health: " + health);
+    health -= damage;
+    Debug.Log("Damage Taken " + health);
     Instantiate(bloodEffect, transform.position, Quaternion.identity);
-    return health -= damage;
+    return health;
   }
 
-  void Update()
+  internal virtual int TakeDamage(int damage, GameObject attacker) { return health -= damage; }
+
+  protected virtual void Update()
   {
     if (health <= 0)
       Destroy(gameObject);

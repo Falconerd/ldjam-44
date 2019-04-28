@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerSword : MonoBehaviour
 {
   Color color = Color.white;
-  float power = 1;
+  float power = 0;
   [SerializeField] float maxPower = 5;
   [SerializeField] SpriteRenderer spriteRenderer;
 

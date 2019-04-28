@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
   Controller2D controller;
 
   Animator animator;
+  internal bool attacking;
 
   void Start()
   {
@@ -37,7 +38,6 @@ public class Player : MonoBehaviour
 
   void Update()
   {
-
     if (stabSelfTimer > 0)
     {
       if (Time.time > stabbedTime + (stabSelfDuration * 0.8))
@@ -53,6 +53,9 @@ public class Player : MonoBehaviour
 
     Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
+    if (attacking)
+      input.x = 0;
+
     animator.SetBool("isRunning", input.x != 0);
     animator.SetBool("isJumping", !controller.collisions.below);
 
@@ -64,9 +67,6 @@ public class Player : MonoBehaviour
 
     if (Input.GetButtonDown("StabSelf") && velocity.y == 0)
       StabSelf();
-
-    // if (Input.GetButtonDown("Attack"))
-
 
     velocity.x = input.x * moveSpeed;
     velocity.y += gravity * Time.deltaTime;

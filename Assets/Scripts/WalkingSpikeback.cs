@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WalkingSpikeback : MonoBehaviour
+public class WalkingSpikeback : Enemy
 {
   [SerializeField]
   float speed = 4;
@@ -10,8 +10,9 @@ public class WalkingSpikeback : MonoBehaviour
   LayerMask collisionMask;
   float direction = 1; // Right
 
-  void Update()
+  protected override void Update()
   {
+    base.Update();
     // Check if hit wall
     RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * direction, 0.3f, collisionMask);
     if (hit)
@@ -38,5 +39,18 @@ public class WalkingSpikeback : MonoBehaviour
     direction *= -1;
     float newLocalScaleX = transform.localScale.x * -1;
     transform.localScale = new Vector3(newLocalScaleX, 1, 1);
+  }
+
+  [SerializeField]
+  GameObject sparksPrefab;
+
+  internal override int TakeDamage(int damage, GameObject attacker)
+  {
+    Debug.Log("Wahoooo " + transform.localScale.x + "|" + attacker.transform.localScale.x);
+    if (transform.localScale.x == attacker.transform.localScale.x)
+      Instantiate(sparksPrefab, transform.position, Quaternion.identity);
+    else
+      return TakeDamage(damage);
+    return 0;
   }
 }
