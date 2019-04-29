@@ -25,7 +25,14 @@ public class PlayerAttack : MonoBehaviour
   CameraShake cameraShake;
 
   [SerializeField] GameObject sparksPrefab;
+  float lastHitTime;
 
+  Player player;
+
+  void Start()
+  {
+    player = GetComponent<Player>();
+  }
   void Update()
   {
     if (timeBtwAttack <= 0)
@@ -36,9 +43,9 @@ public class PlayerAttack : MonoBehaviour
         animator.SetTrigger("attack");
         animator.SetBool("isAttacking", true);
         GetComponent<Player>().attacking = true;
-        GetComponent<PlayerSword>().DecreaseSwordPower();
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackTransform.position, attackRange, layerMask);
         List<Enemy> uniqueEnemyList = new List<Enemy>();
+        int essence = player.GetEssence();
         for (int i = 0; i < enemiesToDamage.Length; i++)
         {
           // Check if we hit the correct side of the enemy.
@@ -47,10 +54,28 @@ public class PlayerAttack : MonoBehaviour
             continue;
 
           uniqueEnemyList.Add(enemy);
-          enemy.TakeDamage(damage, gameObject);
+          int damageGiven = enemy.TakeDamage(damage + essence, gameObject);
+          if (damageGiven > 0)
+          {
+            if (Time.time - 1 < lastHitTime)
+            {
+              Debug.Log("Hit an enemy within 1s");
+              // add some essence or whatever
+              player.IncreaseEssence(1);
+              GetComponent<PlayerSword>().IncreaseSwordPower();
+            }
+            lastHitTime = Time.time;
+          }
         }
         if (enemiesToDamage.Length > 0)
+        {
           StartCoroutine(cameraShake.Shake(.15f, .04f));
+        }
+        else
+        {
+          player.DecreaseEssence(1);
+          GetComponent<PlayerSword>().DecreaseSwordPower();
+        }
         timeBtwAttack = startTimeBtwAttack;
       }
     }

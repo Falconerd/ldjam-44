@@ -6,7 +6,7 @@ public class PlayerSword : MonoBehaviour
 {
   Color color = Color.white;
   float power = 0;
-  [SerializeField] float maxPower = 5;
+  [SerializeField] float maxPower = 4;
   [SerializeField] SpriteRenderer spriteRenderer;
 
   void Update()
@@ -29,6 +29,13 @@ public class PlayerSword : MonoBehaviour
   {
     if (power > 0)
       power--;
+    return power;
+  }
+
+  internal float IncreaseSwordPower()
+  {
+    if (power < maxPower)
+      power++;
     return power;
   }
 }

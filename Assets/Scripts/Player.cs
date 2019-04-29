@@ -27,6 +27,11 @@ public class Player : MonoBehaviour
   Animator animator;
   internal bool attacking;
 
+  [SerializeField] int maxEssence = 4;
+  [SerializeField, ReadOnly]
+  int essence;
+
+  public Vector2 input;
   void Start()
   {
     controller = GetComponent<Controller2D>();
@@ -36,13 +41,34 @@ public class Player : MonoBehaviour
     minJumpForce = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
   }
 
+  internal int DecreaseEssence(int amount)
+  {
+    essence -= amount;
+    if (essence < 0)
+      essence = 0;
+    return essence;
+  }
+
+  internal int GetEssence()
+  {
+    return essence;
+  }
+  internal int IncreaseEssence(int amount)
+  {
+    essence += amount;
+    if (essence > maxEssence)
+      essence = maxEssence;
+    return essence;
+  }
+
   void Update()
   {
     if (stabSelfTimer > 0)
     {
       if (Time.time > stabbedTime + (stabSelfDuration * 0.8))
       {
-        GetComponent<PlayerSword>().SetSwordPower(3);
+        essence = maxEssence;
+        GetComponent<PlayerSword>().SetSwordPower(essence);
       }
       stabSelfTimer -= Time.deltaTime;
       return;
@@ -51,7 +77,7 @@ public class Player : MonoBehaviour
     if (controller.collisions.above || controller.collisions.below)
       velocity.y = 0;
 
-    Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+    input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
     if (attacking)
       input.x = 0;
@@ -74,7 +100,10 @@ public class Player : MonoBehaviour
     if (Mathf.Sign(velocity.x) != transform.localScale.x && velocity.x != 0)
       Flip();
 
-    controller.Move(velocity * Time.deltaTime, input);
+    if (essence == 0)
+      controller.Move(velocity * Time.deltaTime, input);
+    else
+      controller.Move(velocity * Time.deltaTime * (1 + (essence * .2f)), input);
   }
 
   void Flip()
@@ -101,6 +130,7 @@ public class Player : MonoBehaviour
 
   void StabSelf()
   {
+    GetComponent<Health>().DecreaseHealth(1);
     stabbedTime = Time.time;
     stabSelfTimer = stabSelfDuration;
     animator.SetTrigger("stabSelf");

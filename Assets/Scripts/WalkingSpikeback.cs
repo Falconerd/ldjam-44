@@ -19,7 +19,7 @@ public class WalkingSpikeback : Enemy
       Reverse();
 
     // Check for edge
-    hit = Physics2D.Raycast(transform.position, Vector2.down, 1f, collisionMask);
+    hit = Physics2D.Raycast(transform.position + (Vector3.right * direction * 0.3f), Vector2.down, 1f, collisionMask);
     if (!hit)
     {
       Reverse();
@@ -29,7 +29,7 @@ public class WalkingSpikeback : Enemy
 
 
     Debug.DrawRay(transform.position, Vector2.right * direction * 0.3f, Color.red, Time.deltaTime);
-    Debug.DrawRay(transform.position, Vector2.down * 1f, Color.red, Time.deltaTime);
+    Debug.DrawRay(transform.position + (Vector3.right * direction * 0.3f), Vector2.down * 1f, Color.red, Time.deltaTime);
     // Walk forard until hitting a wall or edge, then change direction.
     transform.Translate(new Vector2(direction * speed * Time.deltaTime, 0));
   }
