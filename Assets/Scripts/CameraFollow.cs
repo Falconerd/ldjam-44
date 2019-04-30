@@ -24,11 +24,12 @@ public class CameraFollow : MonoBehaviour
 
   bool lookAheadStopped;
 
-  BoxCollider2D levelBounds;
+  [SerializeField] BoxCollider2D levelBounds;
+
+  [SerializeField] Camera thisCamera;
   void Start()
   {
     focusArea = new FocusArea(target.bounds, focusAreaSize);
-    levelBounds = GetComponent<BoxCollider2D>();
   }
 
   void LateUpdate()
@@ -63,13 +64,32 @@ public class CameraFollow : MonoBehaviour
 
     transform.position = (Vector3)focusPosition + Vector3.forward * -10;
 
-    // Get edges
+    // Check if the bottom edge of the camera is below the bottom edge of the level
+    Vector3 topRight = thisCamera.ViewportToWorldPoint(new Vector3(1, 1, thisCamera.nearClipPlane));
+    Vector3 bottomLeft = thisCamera.ViewportToWorldPoint(new Vector3(0, 0, thisCamera.nearClipPlane));
+
+    Vector3 newPosition = transform.position;
+
+    if (bottomLeft.y < levelBounds.bounds.min.y)
+      newPosition.y -= bottomLeft.y - levelBounds.bounds.min.y;
+    if (bottomLeft.x < levelBounds.bounds.min.x)
+      newPosition.x -= bottomLeft.x - levelBounds.bounds.min.x;
+    if (topRight.y > levelBounds.bounds.max.y)
+      newPosition.y -= topRight.y - levelBounds.bounds.max.y;
+    if (topRight.x > levelBounds.bounds.max.x)
+      newPosition.x -= topRight.x - levelBounds.bounds.max.x;
+
+    transform.position = newPosition;
   }
 
   void OnDrawGizmos()
   {
     Gizmos.color = new Color(1, 0, 0, 0.5f);
     Gizmos.DrawCube(focusArea.centre, focusAreaSize);
+
+    Vector3 p = thisCamera.ViewportToWorldPoint(new Vector3(1, 1, thisCamera.nearClipPlane));
+    Gizmos.color = Color.yellow;
+    Gizmos.DrawSphere(p, 0.1F);
   }
 
   struct FocusArea

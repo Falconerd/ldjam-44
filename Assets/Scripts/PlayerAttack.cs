@@ -29,9 +29,16 @@ public class PlayerAttack : MonoBehaviour
 
   Player player;
 
+  public AudioClip attackSound;
+  public AudioClip invalidHitSound;
+  public AudioClip hitSound;
+  public AudioSource audioSource;
+  public AudioSource slashSource;
+
   void Start()
   {
     player = GetComponent<Player>();
+    audioSource = GetComponent<AudioSource>();
   }
   void Update()
   {
@@ -39,6 +46,9 @@ public class PlayerAttack : MonoBehaviour
     {
       if (Input.GetButtonDown("Attack"))
       {
+        bool invalidHit = false;
+        slashSource.clip = attackSound;
+        slashSource.Play();
         lastAttackTime = Time.time;
         animator.SetTrigger("attack");
         animator.SetBool("isAttacking", true);
@@ -66,16 +76,28 @@ public class PlayerAttack : MonoBehaviour
             }
             lastHitTime = Time.time;
           }
+          else
+            invalidHit = true;
         }
+
         if (enemiesToDamage.Length > 0)
         {
           StartCoroutine(cameraShake.Shake(.15f, .04f));
+          audioSource.clip = hitSound;
+          audioSource.Play();
         }
         else
         {
           player.DecreaseEssence(1);
           GetComponent<PlayerSword>().DecreaseSwordPower();
         }
+
+        if (invalidHit)
+        {
+          audioSource.clip = invalidHitSound;
+          audioSource.Play();
+        }
+
         timeBtwAttack = startTimeBtwAttack;
       }
     }

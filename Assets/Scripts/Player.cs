@@ -61,8 +61,18 @@ public class Player : MonoBehaviour
     return essence;
   }
 
+  [SerializeField] Vector2 knockedVelocity;
   void Update()
   {
+    if (knockedTimer > 0)
+    {
+      velocity.x = knockedVelocity.x * Mathf.Sign(transform.position.x - knockedPosition.x);
+      velocity.y = knockedVelocity.y;
+
+      knockedTimer -= Time.deltaTime;
+      controller.Move(velocity * Time.deltaTime, Vector2.zero);
+      return;
+    }
     if (stabSelfTimer > 0)
     {
       if (Time.time > stabbedTime + (stabSelfDuration * 0.8))
@@ -135,4 +145,17 @@ public class Player : MonoBehaviour
     stabSelfTimer = stabSelfDuration;
     animator.SetTrigger("stabSelf");
   }
+
+  internal void GetHit(Vector3 position)
+  {
+    GetComponent<Health>().DecreaseHealth(1);
+    knockedTimer = knockedTime;
+    knockedPosition = position;
+  }
+
+  bool beingKnocked;
+  float knockedTimer;
+  [SerializeField] float knockedTime = 0.4f;
+  Vector3 knockedPosition;
+
 }
